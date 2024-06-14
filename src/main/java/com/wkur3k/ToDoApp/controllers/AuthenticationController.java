@@ -6,14 +6,21 @@ import com.wkur3k.ToDoApp.dtos.RegisterUserDto;
 import com.wkur3k.ToDoApp.entities.User;
 import com.wkur3k.ToDoApp.services.AuthenticationService;
 import com.wkur3k.ToDoApp.services.JwtService;
+import jakarta.validation.Valid;
+import jakarta.validation.executable.ValidateOnExecution;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RequestMapping("/auth")
 @RestController
+@Validated
 public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
@@ -24,10 +31,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<URI> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
-
-        return ResponseEntity.ok(registeredUser);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/{id}").buildAndExpand(registeredUser.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @PostMapping("/login")
