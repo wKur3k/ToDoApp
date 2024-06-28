@@ -6,9 +6,10 @@ import com.wkur3k.ToDoApp.dtos.RegisterUserDto;
 import com.wkur3k.ToDoApp.entities.User;
 import com.wkur3k.ToDoApp.services.AuthenticationService;
 import com.wkur3k.ToDoApp.services.JwtService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
-import jakarta.validation.executable.ValidateOnExecution;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import java.net.URI;
 @RequestMapping("/auth")
 @RestController
 @Validated
+@PermitAll
 public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
